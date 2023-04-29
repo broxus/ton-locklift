@@ -20,8 +20,7 @@ export const initializeExtenders = (params: {
       mergeMap(extender =>
         from(extender.initializer(params)).pipe(
           tap(extenderObject => {
-            //@ts-ignore
-            params.locklift[extender.pluginName] = extenderObject;
+            (params.locklift as any)[extender.pluginName] = extenderObject;
           }),
         ),
       ),
