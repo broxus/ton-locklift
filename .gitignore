@@ -15,3 +15,4 @@ sample-project-typescript/build
 *.map
 *.js
 tsconfig.tsbuildinfo
+**/.DS_Store

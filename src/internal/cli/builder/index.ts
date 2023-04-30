@@ -32,6 +32,9 @@ type Option = {
   build: string;
   disableIncludePath: boolean;
   contracts: string;
+  mode?: string;
+  docs?: string;
+  include?: string;
 };
 export class Builder {
   private options: Option;
@@ -166,7 +169,6 @@ export class Builder {
         logger.printInfo(`Building ${path}`);
 
         const output = execSyncWrapper(
-          //@ts-ignore
           `cd ${this.options.build} && ${this.config.compilerPath} ./../${path} --${this.options.mode}`,
         );
 
@@ -198,12 +200,7 @@ export class Builder {
           rmWhitespace: true,
         },
       );
-      //@ts-ignore
-      fs.writeFileSync(
-        //@ts-ignore
-        resolve(process.cwd(), this.options.docs, "index.md"),
-        render,
-      );
+      fs.writeFileSync(resolve(process.cwd(), this.options.docs || "", "index.md"), render);
 
       logger.printInfo("Docs generated successfully!");
     } catch (e) {
@@ -223,18 +220,14 @@ export class Builder {
       // Make them all absolute
       .map(c => resolve(process.cwd(), this.options.build, c));
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const docs = [...output.matchAll(this.docRegex)].map(m =>
-      //@ts-ignore
-      JSON.parse(m.groups?.doc),
-    );
+    const docs = [...output.matchAll(this.docRegex)].map(m => JSON.parse(m.groups?.doc || ""));
 
     return _.zip(contracts, docs).reduce((acc: ParsedDoc[], [contract, doc]: string[]) => {
       const [path, name] = contract.split(":");
 
       // Check name matches the "include" pattern and contract is located in the "contracts" dir
       if (
-        //@ts-ignore
-        name.match(new RegExp(this.options.include)) !== null &&
+        name.match(new RegExp(this.options.include || "")) !== null &&
         path.startsWith(`${process.cwd()}/${this.options.contracts}`)
       ) {
         return [

@@ -14,7 +14,7 @@ const getLinkerUrl = ({ version }: { version: string }) =>
 const getCompilerUrl = ({ version }: { version: string }) =>
   `https://binaries.tonlabs.io/${getGzFileName(getCompilerFileName({ version }))}`;
 const getLibUrl = ({ version }: { version: string }) =>
-  `http://sdkbinaries.tonlabs.io/${getGzFileName(getLibFileName({ version }))}`;
+  `https://sdkbinaries.tonlabs.io/${getGzFileName(getLibFileName({ version }))}`;
 
 export const replaceDots = (arg: string): string => arg.replace(/\./g, "_");
 

@@ -1,6 +1,5 @@
 import { Command, Option } from "commander";
 import Mocha from "mocha";
-import "ts-mocha";
 import path from "path";
 import dirTree from "directory-tree";
 
@@ -9,6 +8,11 @@ import { Locklift } from "../../../index";
 import * as utils from "../builder/utils";
 
 import { buildStep } from "../steps/build";
+
+require("ts-node").register({
+  project: path.join(__dirname, "../../../tsconfig.json"),
+  transpileOnly: !process.env.TS_TYPE_CHECK,
+});
 
 const program = new Command();
 
@@ -49,6 +53,7 @@ program
       process.env.TS_NODE_PROJECT = config.mocha?.tsconfig;
       process.env.TS_CONFIG_PATHS = "true";
     }
+    require("ts-mocha");
     const mocha = new Mocha({ ...config.mocha });
 
     // Run all .js files in tests or only specified tests
